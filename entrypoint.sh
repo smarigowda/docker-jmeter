@@ -5,6 +5,7 @@
 # This script expects the standdard JMeter command parameters.
 #
 echo "Running entrypoint.sh now..."
+echo "jmeter args = $@"
 set -e
 freeMem=`awk '/MemFree/ { print int($2/1024) }' /proc/meminfo`
 s=$(($freeMem/10*8))
