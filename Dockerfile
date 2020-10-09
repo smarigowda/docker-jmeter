@@ -8,11 +8,13 @@ ARG JMETER_VERSION="5.1.1"
 ENV JMETER_HOME /opt/apache-jmeter-${JMETER_VERSION}
 ENV	JMETER_BIN	${JMETER_HOME}/bin
 ENV	JMETER_DOWNLOAD_URL  https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz
-
 # Install extra packages
 # See https://github.com/gliderlabs/docker-alpine/issues/136#issuecomment-272703023
 # Change TimeZone TODO: TZ still is not set!
 ARG TZ="Europe/Amsterdam"
+
+
+
 RUN    apk update \
 	&& apk upgrade \
 	&& apk add ca-certificates \
@@ -25,6 +27,13 @@ RUN    apk update \
 	&& mkdir -p /opt  \
 	&& tar -xzf /tmp/dependencies/apache-jmeter-${JMETER_VERSION}.tgz -C /opt  \
 	&& rm -rf /tmp/dependencies
+
+COPY jars/jmeter-plugins-manager-1.4.jar /opt/apache-jmeter-${JMETER_VERSION}/lib/ext/
+COPY jars/cmdrunner-2.2.jar /opt/apache-jmeter-${JMETER_VERSION}/lib/
+	
+RUN java -cp /opt/apache-jmeter-${JMETER_VERSION}/lib/ext/jmeter-plugins-manager-1.4.jar org.jmeterplugins.repository.PluginManagerCMDInstaller \
+	&& /opt/apache-jmeter-${JMETER_VERSION}/bin/PluginsManagerCMD.sh install jpgc-casutg
+
 
 # TODO: plugins (later)
 # && unzip -oq "/tmp/dependencies/JMeterPlugins-*.zip" -d $JMETER_HOME

@@ -8,9 +8,12 @@ echo "Running entrypoint.sh now..."
 echo "jmeter args = $@"
 set -e
 freeMem=`awk '/MemFree/ { print int($2/1024) }' /proc/meminfo`
-s=$(($freeMem/10*8))
-x=$(($freeMem/10*8))
-n=$(($freeMem/10*2))
+# s=$(($freeMem/10*8))
+# x=$(($freeMem/10*8))
+# n=$(($freeMem/10*2))
+s=216
+x=1024
+n=1024
 export JVM_ARGS="-Xmn${n}m -Xms${s}m -Xmx${x}m"
 
 echo "START Running Jmeter on `date`"
